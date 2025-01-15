@@ -1,0 +1,153 @@
+<!--
+  @description       : 
+  @author            : ChangeMeIn@UserSettingsUnder.SFDoc
+  @group             : 
+  @last modified on  : 12-24-2024
+  @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+-->
+<template>
+    <lightning-card title="Booking Form">
+        <div class="slds-p-around_medium">
+            <lightning-input 
+                label="Name" 
+                type="text" 
+                value={name} 
+                name="name"
+                onchange={handleChange}>
+            </lightning-input> 
+            
+            <lightning-input 
+                label="Email" 
+                type="email" 
+                value={email} 
+                name="email"
+                onchange={handleChange}>
+            </lightning-input>
+            
+            <lightning-input 
+                label="Phone" 
+                type="tel" 
+                placeholder="e.g. +44 7700 993107" 
+                value={phone} 
+                name="phone"
+                onchange={handleChange}>
+            </lightning-input>
+
+            <!-- Departure City Picklist -->
+            <lightning-combobox 
+                label="Departure City"
+                value={departureCity}
+                name="departureCity"
+                options={cityOptions}
+                onchange={handleCityChange}
+                placeholder="Select Departure City">
+            </lightning-combobox>
+
+            <!-- Arrival City Picklist -->
+            <lightning-combobox 
+                label="Arrival City"
+                value={arrivalCity}
+                name="arrivalCity"
+                options={cityOptions}
+                onchange={handleCityChange}
+                placeholder="Select Arrival City">
+            </lightning-combobox>
+
+            <!-- Display City Codes (locked fields) -->
+            <lightning-input 
+                label="Departure City Code" 
+                value={departureCityCode} 
+                name="departureCityCode" 
+                readonly>
+            </lightning-input>
+            
+            <lightning-input
+                label="Arrival City Code" 
+                value={arrivalCityCode} 
+                name="arrivalCityCode" 
+                readonly>
+            </lightning-input>
+
+            <lightning-input
+                label="Departure Date"
+                type="date"
+                value={departureDate}
+                name="departureDate"
+                onchange={handleChange}>
+            </lightning-input>
+
+            <lightning-input 
+                label="Return Date"
+                type="date"
+                value={returnDate}
+                name="returnDate"
+                onchange={handleChange}>
+            </lightning-input>
+
+            <lightning-combobox 
+                label="Preferred Airline"
+                value={preferedAirline}
+                name="preferedAirline"
+                options={preferedAirlineOptions}
+                onchange={handleAirlineChange}
+                placeholder="Select an airline"
+                message-when-value-missing="Please select an airline">
+            </lightning-combobox>
+
+            <lightning-input
+            label="Selected Airline" 
+            value={SelectedAirlineCode} 
+            name="selectedAirlineCode" 
+            readonly>
+        </lightning-input>
+            
+
+        
+
+        </div>
+        
+        <div class="slds-align_absolute-center">
+            <lightning-button 
+                label="Search Flights" 
+                variant="brand" 
+                onclick={handleSubmit}>
+            </lightning-button> 
+        </div>
+    </lightning-card>
+     <!-- Loading Spinner -->
+     <template if:true={isSearchFlightLoading}>
+        <lightning-card title="Available Flights">
+            <div class="slds-p-around_medium">
+                <lightning-spinner
+                    alternative-text="Loading"
+                    size="large">
+                </lightning-spinner>
+            </div>
+        </lightning-card>
+    </template>
+
+    <!-- Available Flights -->
+    <template if:true={availableFlights}>
+        <lightning-card title="Available Flights">
+            <div class="slds-p-around_medium">
+                <template for:each={availableFlights} for:item="flight">
+                    <div key={flight.id} class="slds-box slds-m-bottom_small">
+                        <p><strong>{flight.airline}</strong></p>
+                        <p>Departure: {flight.departureCity} - {flight.departureDate}</p>
+                        <p>Arrival: {flight.arrivalCity} - {flight.arrivalDate}</p>
+                        <p>Price: {flight.price}</p>
+
+                        <!-- "Book Now" Button -->
+                        <lightning-button 
+                            label="Book Now" 
+                            variant="brand" 
+                            onclick={handleBookNow}  
+                            data-id={flight.id}>
+                        </lightning-button>
+                    </div>
+                </template>
+            </div>
+        </lightning-card>
+    </template>
+</template>
+
